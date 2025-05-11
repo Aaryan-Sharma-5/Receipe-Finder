@@ -37,10 +37,8 @@ async function cachedFetch(url, cacheMap, cacheKey) {
   return data;
 }
 
-const apiRouter = express.Router();
-
 // Get recipes by ingredient
-apiRouter.get('/recipes', async (req, res) => {
+app.get('/recipes', async (req, res) => {
   const ingredient = req.query.ingredient;
 
   if (!ingredient) {
@@ -77,9 +75,8 @@ apiRouter.get('/meal/:id', async (req, res) => {
   }
 });
 
-app.use('/', apiRouter);
-app.use('/api', apiRouter);
-
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+module.exports = app;
