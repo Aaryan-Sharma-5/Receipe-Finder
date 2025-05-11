@@ -37,8 +37,10 @@ async function cachedFetch(url, cacheMap, cacheKey) {
   return data;
 }
 
+const apiRouter = express.Router();
+
 // Get recipes by ingredient
-app.get('/recipes', async (req, res) => {
+apiRouter.get('/recipes', async (req, res) => {
   const ingredient = req.query.ingredient;
 
   if (!ingredient) {
@@ -59,7 +61,7 @@ app.get('/recipes', async (req, res) => {
 });
 
 // Get meal details by ID
-app.get('/meal/:id', async (req, res) => {
+apiRouter.get('/meal/:id', async (req, res) => {
   const mealId = req.params.id;
 
   try {
@@ -75,10 +77,8 @@ app.get('/meal/:id', async (req, res) => {
   }
 });
 
-app.use((err, req, res, next) => {
-  console.error('Error:', err);
-  res.status(500).json({ error: 'Server Error' });
-});
+app.use('/', apiRouter);
+app.use('/api', apiRouter);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
