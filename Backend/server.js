@@ -38,7 +38,6 @@ async function cachedFetch(url, cacheMap, cacheKey) {
 }
 
 // Get recipes by ingredient
-// Get recipes by ingredient
 app.get('/recipes', async (req, res) => {
   const ingredient = req.query.ingredient;
 
@@ -47,38 +46,17 @@ app.get('/recipes', async (req, res) => {
   }
 
   try {
-    // Add a timeout to the fetch request
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 10000);
-    
-    const response = await fetch(
+    // Use cachedFetch helper instead of direct fetch
+    const data = await cachedFetch(
       `https://www.themealdb.com/api/json/v1/1/filter.php?i=${encodeURIComponent(ingredient)}`,
-      { signal: controller.signal }
+      cache.recipes,
+      ingredient.toLowerCase()
     );
     
-    clearTimeout(timeout);
-    
-    if (!response.ok) {
-      throw new Error(`MealDB API responded with status ${response.status}`);
-    }
-    
-    const data = await response.json();
-    
-    // Store in cache
-    cache.recipes.set(ingredient.toLowerCase(), {
-      data,
-      timestamp: Date.now()
-    });
-    
+    // Return the meals array
     return res.json(data.meals || []);
   } catch (error) {
-    console.error('Error fetching recipes:', error.message);
-    
-    // More specific error response
-    if (error.name === 'AbortError') {
-      return res.status(504).json({ error: 'Request to MealDB API timed out' });
-    }
-    
+    console.error('Error fetching recipes:', error);
     return res.status(500).json({ 
       error: 'Failed to fetch recipes',
       details: error.message 
