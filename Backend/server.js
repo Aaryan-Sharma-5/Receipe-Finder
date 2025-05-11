@@ -38,6 +38,7 @@ async function cachedFetch(url, cacheMap, cacheKey) {
 }
 
 // Get recipes by ingredient
+// Get recipes by ingredient
 app.get('/recipes', async (req, res) => {
   const ingredient = req.query.ingredient;
 
@@ -46,20 +47,47 @@ app.get('/recipes', async (req, res) => {
   }
 
   try {
-    const data = await cachedFetch(
+    // Add a timeout to the fetch request
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10000);
+    
+    const response = await fetch(
       `https://www.themealdb.com/api/json/v1/1/filter.php?i=${encodeURIComponent(ingredient)}`,
-      cache.recipes,
-      ingredient.toLowerCase()
+      { signal: controller.signal }
     );
-    res.json(data);
+    
+    clearTimeout(timeout);
+    
+    if (!response.ok) {
+      throw new Error(`MealDB API responded with status ${response.status}`);
+    }
+    
+    const data = await response.json();
+    
+    // Store in cache
+    cache.recipes.set(ingredient.toLowerCase(), {
+      data,
+      timestamp: Date.now()
+    });
+    
+    return res.json(data.meals || []);
   } catch (error) {
-    console.error('Error fetching recipes:', error);
-    res.status(500).json({ error: 'Failed to fetch recipes' });
+    console.error('Error fetching recipes:', error.message);
+    
+    // More specific error response
+    if (error.name === 'AbortError') {
+      return res.status(504).json({ error: 'Request to MealDB API timed out' });
+    }
+    
+    return res.status(500).json({ 
+      error: 'Failed to fetch recipes',
+      details: error.message 
+    });
   }
 });
 
 // Get meal details by ID
-apiRouter.get('/meal/:id', async (req, res) => {
+app.get('/meal/:id', async (req, res) => {
   const mealId = req.params.id;
 
   try {
