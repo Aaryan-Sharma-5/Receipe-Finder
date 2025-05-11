@@ -38,7 +38,7 @@ async function cachedFetch(url, cacheMap, cacheKey) {
 }
 
 // Get recipes by ingredient
-app.get('/recipes', async (req, res) => {
+app.get('/api/recipes', async (req, res) => {
   const ingredient = req.query.ingredient;
 
   if (!ingredient) {
@@ -65,7 +65,7 @@ app.get('/recipes', async (req, res) => {
 });
 
 // Get meal details by ID
-app.get('/meal/:id', async (req, res) => {
+app.get('/api/meal/:id', async (req, res) => {
   const mealId = req.params.id;
 
   try {
