@@ -1,4 +1,6 @@
-const API_BASE_URL = 'http://localhost:5000';
+const API_BASE_URL = (window.location.hostname === 'localhost')
+  ? 'http://localhost:5000'
+  : '/api';
 const MEAL_DB_API = 'https://www.themealdb.com/api/json/v1/1';
 
 let elements = {};
@@ -66,7 +68,10 @@ function searchRecipes() {
     })
     .catch(error => {
       console.error("Error fetching recipes:", error);
-      showError(`Error fetching recipes: ${error.message}\nMake sure your server is running on port 5000`);
+      const errorMsg = (window.location.hostname === 'localhost')
+        ? `Error fetching recipes: ${error.message}\nMake sure your server is running on port 5000`
+        : `Error fetching recipes. Please try again later.`;
+      showError(errorMsg);
     });
 }
 
