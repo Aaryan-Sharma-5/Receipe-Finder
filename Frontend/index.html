@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Culinary Explorer | Find Delicious Recipes</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <h1><span>🍽️</span> Culinary Explorer</h1>
+      <p>Discover amazing recipes</p>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="search-container">
+      <div class="search-wrapper">
+        <input type="text" id="ingredientInput" placeholder="Enter an ingredient (e.g., egg)" />
+        <button onclick="searchRecipes()">Find Recipes</button>
+      </div>
+    </div>
+    <div id="backButtonPlaceholder"></div>
+    <div id="results">
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-content">
+      <p>&copy; 2025 Culinary Explorer helps you find delicious recipes. <br>Powered by TheMealDB</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
