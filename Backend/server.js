@@ -70,13 +70,18 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
+// Export for Vercel
+let serverless;
+try {
+  serverless = require('serverless-http');
+  module.exports = serverless(app);
+} catch (error) {
+  console.log('serverless-http not available, running in standard mode');
+}
+
 // Listen directly when not on Vercel
 if (process.env.NODE_ENV !== 'vercel') {
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
   });
 }
-
-// Export for Vercel
-const serverless = require('serverless-http');
-module.exports = serverless(app);
