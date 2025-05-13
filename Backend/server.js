@@ -1,11 +1,13 @@
 const express = require('express');
 const fetch = require('node-fetch');
 const cors = require('cors');
+const path = require('path');
 const app = express();
+const PORT = process.env.PORT || 5000;
 
 app.use(cors());
 
-// Cache logic as before
+// Cache logic 
 const cache = {
   recipes: new Map(),
   mealDetails: new Map()
@@ -59,6 +61,22 @@ app.get('/api/meal/:id', async (req, res) => {
   }
 });
 
-// 👇 This is what makes Express compatible with Vercel
+// Serve static files in production
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../Frontend')));
+  
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../Frontend', 'index.html'));
+  });
+}
+
+// Listen directly when not on Vercel
+if (process.env.NODE_ENV !== 'vercel') {
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
+
+// Export for Vercel
 const serverless = require('serverless-http');
 module.exports = serverless(app);
