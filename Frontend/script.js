@@ -1,7 +1,7 @@
 const API_BASE_URL = (window.location.hostname === 'localhost')
   ? 'http://localhost:5000'
   : 'https://receipe-finder-production.up.railway.app';
-  
+
 const MEAL_DB_API = 'https://www.themealdb.com/api/json/v1/1';
 
 let elements = {};
@@ -57,7 +57,7 @@ function searchRecipes() {
     return;
   }
 
-  fetch(`${API_BASE_URL}/recipes?ingredient=${ingredient}`)
+  fetch(`${API_BASE_URL}/api/recipes?ingredient=${ingredient}`)
     .then(res => {
       if (!res.ok) {
         throw new Error(`Server returned ${res.status}: ${res.statusText}`);
@@ -164,7 +164,7 @@ function getMealDetails(mealId) {
 
   showLoading("Loading recipe details...");
 
-  fetch(`${MEAL_DB_API}/lookup.php?i=${mealId}`)
+  fetch(`${API_BASE_URL}/api/meal/${mealId}`)
     .then(res => {
       if (!res.ok) {
         throw new Error(`API responded with status ${res.status}`);

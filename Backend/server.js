@@ -33,7 +33,7 @@ async function cachedFetch(url, cacheMap, cacheKey) {
 }
 
 // Routes
-app.get('/api/recipes', async (req, res) => {
+app.get('/recipes', async (req, res) => {
   const ingredient = req.query.ingredient;
   if (!ingredient) return res.status(400).json({ error: 'Ingredient is required' });
 
@@ -50,7 +50,7 @@ app.get('/api/recipes', async (req, res) => {
   }
 });
 
-app.get('/api/meal/:id', async (req, res) => {
+app.get('/meal/:id', async (req, res) => {
   const mealId = req.params.id;
   try {
     const data = await cachedFetch(
