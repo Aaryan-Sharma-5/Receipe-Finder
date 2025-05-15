@@ -1,6 +1,7 @@
 const API_BASE_URL = (window.location.hostname === 'localhost')
   ? 'http://localhost:5000'
-  : '/api';
+  : 'https://receipe-finder-production.up.railway.app';
+  
 const MEAL_DB_API = 'https://www.themealdb.com/api/json/v1/1';
 
 let elements = {};
